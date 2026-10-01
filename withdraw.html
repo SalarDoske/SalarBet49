@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SalarBet - ڤەکێشانا پارەی (Withdraw)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #0a0816;
+            color: #f0ece4;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .custom-card {
+            background: linear-gradient(145deg, #1a1530, #0f0b1e);
+            border: 2px solid #3a2a5a;
+            box-shadow: 0 0 80px rgba(106, 63, 138, 0.3);
+        }
+        .custom-input {
+            background: #0c0918;
+            border: 1px solid #2a2240;
+            color: #fff;
+        }
+        .custom-input:focus {
+            border-color: #c084e0;
+            box-shadow: 0 0 15px rgba(192, 132, 224, 0.2);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-pink-500 selection:text-white">
+    
+<!-- Navbar -->
+<header class="bg-[#0f0b1e]/80 backdrop-blur-md border-b border-[#2a2240] shadow-lg py-4 px-6 sticky top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center">
+        <div class="flex items-center space-x-3 space-x-reverse">
+            <span class="bg-gradient-to-tr from-pink-600 to-purple-600 text-white p-2.5 rounded-xl font-bold text-lg shadow-md shadow-pink-900/40">
+                <i class="fa-solid fa-wallet"></i>
+            </span>
+            <div>
+                <h1 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-400">SalarBet</h1>
+                <span class="text-xs text-gray-400 font-medium">پەڕەیا ڤەکێشانا پارەی</span>
+            </div>
+        </div>
+        <a href="/" class="bg-[#181528] hover:bg-[#25203d] text-gray-300 hover:text-white px-4 py-2 rounded-xl text-sm font-semibold transition border border-[#3a2a5a] flex items-center space-x-2 space-x-reverse shadow-sm">
+            <i class="fa-solid fa-house text-purple-400"></i>
+            <span>زڤڕین بۆ مالپەری</span>
+        </a>
+    </div>
+</header>
+
+<!-- Main Container -->
+<main class="container mx-auto px-4 max-w-lg my-auto py-10">
+    <div class="custom-card rounded-3xl p-6 md:p-10 relative overflow-hidden">
+        
+        <!-- Background Glow Effect -->
+        <div class="absolute -top-24 -right-24 w-48 h-48 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-pink-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="text-center mb-8 relative z-10">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#25203d] border border-[#3a2a5a] text-pink-400 text-2xl mb-3 shadow-inner">
+                <i class="fa-solid fa-money-bill-transfer"></i>
+            </div>
+            <h2 class="text-2xl font-extrabold text-white">داخوازا ڤەکێشانا پارەی</h2>
+            <p class="text-[#8a7aa8] text-xs md:text-sm mt-1">ڕێگە و ژمارە/حسابێ خۆ دیار بکە بۆ وەرگرتنا پارەی ب سەلامەتی.</p>
+        </div>
+
+        <form id="withdraw-form" class="space-y-5 relative z-10">
+            <!-- بڕی پارەی -->
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-[#8a7aa8] mb-2">بڕی پارەی بۆ ڤەکێشانێ (IQD)</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 right-0 pr-4 flex items-center text-pink-500 font-bold">$</span>
+                    <input type="number" id="amount" name="amount" min="1" step="any" required 
+                        class="custom-input w-full rounded-xl py-3.5 pr-10 pl-4 placeholder-gray-600 focus:outline-none transition font-semibold"
+                        placeholder="بۆ نموونە: 50">
+                </div>
+            </div>
+
+            <!-- رێگەی ڤەکێشانێ -->
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-[#8a7aa8] mb-2">رێگەی ڤەکێشانێ (Method)</label>
+                <div class="relative">
+                    <select id="method" name="method" required 
+                        class="custom-input w-full rounded-xl py-3.5 px-4 focus:outline-none transition appearance-none font-medium cursor-pointer">
+                        <option value="" disabled selected class="text-gray-600">رێگەیەک هەلبژێرە...</option>
+                        <option value="FastPay" class="bg-[#0f0b1e] text-white">FastPay (فاست پەی)</option>
+                        <option value="ZainCash" class="bg-[#0f0b1e] text-white">ZainCash (زەین کاش)</option>
+                        <option value="FIB" class="bg-[#0f0b1e] text-white">First Iraqi Bank - FIB</option>
+                        <option value="SuperQi" class="bg-[#0f0b1e] text-white">Super Qi Card</option>
+                        <option value="Crypto" class="bg-[#0f0b1e] text-white">Crypto (USDT / BTC)</option>
+                    </select>
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#8a7aa8]">
+                        <i class="fa-solid fa-chevron-down text-xs"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ژمارە / حساب -->
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-[#8a7aa8] mb-2">ژمارا تەلەفۆنی یان حسابێ (Account / Phone)</label>
+                <input type="text" id="accountNum" name="accountNum" required 
+                    class="custom-input w-full rounded-xl py-3.5 px-4 placeholder-gray-600 focus:outline-none transition font-medium"
+                    placeholder="ژمارە یان ناڤێ تەڕڤێنا خۆ لێرە بنڤیسە">
+            </div>
+
+            <!-- دوگمەی ناردنێ -->
+            <button type="submit" 
+                class="w-full bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 hover:from-pink-500 hover:to-indigo-500 text-white font-bold py-4 px-4 rounded-xl shadow-lg shadow-purple-900/40 transition-all duration-200 transform active:scale-[0.98] flex items-center justify-center gap-2 mt-2">
+                <i class="fa-solid fa-paper-plane"></i>
+                <span>ناردنا داخوازا ڤەکێشانێ</span>
+            </button>
+        </form>
+
+        <!-- پەیاما سەرکەفتنێ یان خەلەتیێ -->
+        <div id="response-message" class="hidden mt-6 p-4 rounded-xl text-center text-sm font-semibold transition-all relative z-10"></div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="text-center py-6 text-xs text-[#8a7aa8] border-t border-[#1a1530]">
+    <p>&copy; 2026 SalarBet. هەمی ماف پاراستینە.</p>
+</footer>
+
+<script>
+    $('#withdraw-form').on('submit', function(e) {
+        e.preventDefault();
+
+        let amount = $('#amount').val();
+        let method = $('#method').val();
+        let accountNum = $('#accountNum').val();
+        let msgBox = $('#response-message');
+
+        // Animation state or loading effect simulation
+        msgBox.removeClass('hidden').removeClass('bg-green-500/10 text-green-400 border border-green-500/20 bg-red-500/10 text-red-400 border border-red-500/20')
+              .addClass('bg-purple-500/10 text-purple-300 border border-purple-500/20')
+              .text('⏳ ل چاڤەڕێبوونا ڤەناردنێ...');
+
+        $.ajax({
+            url: '/api/withdraw',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                amount: amount,
+                method: method,
+                accountNum: accountNum
+            }),
+            success: function(response) {
+                if(response.success) {
+                    msgBox.removeClass('bg-purple-500/10 text-purple-300 border border-purple-500/20')
+                          .addClass('bg-green-500/10 text-green-400 border border-green-500/20')
+                          .text(response.message);
+                    $('#withdraw-form')[0].reset();
+                } else {
+                    msgBox.removeClass('bg-purple-500/10 text-purple-300 border border-purple-500/20')
+                          .addClass('bg-red-500/10 text-red-400 border border-red-500/20')
+                          .text(response.error || "خەلەتەک هاتە پێش!");
+                }
+            },
+            error: function(xhr) {
+                let errMessage = "پەیوەندی ب سێرڤەری ڤە نەبەست!";
+                if(xhr.responseJSON && xhr.responseJSON.error) {
+                    errMessage = xhr.responseJSON.error;
+                }
+                msgBox.removeClass('bg-purple-500/10 text-purple-300 border border-purple-500/20')
+                      .addClass('bg-red-500/10 text-red-400 border border-red-500/20')
+                      .text(errMessage);
+            }
+        });
+    });
+</script>
+</body>
+</html>

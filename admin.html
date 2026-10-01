@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SalarBet - Admin Panel</title>
+    <style>
+        body { font-family: system-ui, sans-serif; background: #0f172a; color: #f8fafc; padding: 20px; direction: rtl; margin: 0; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .card { background: #1e293b; border: 1px solid #334155; padding: 20px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); }
+        h2, h3 { color: #38bdf8; margin-top: 0; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+        input { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: #fff; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #10b981; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; }
+        button:hover { background: #059669; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #334155; padding: 12px; text-align: center; font-size: 14px; }
+        th { background: #334155; color: #38bdf8; }
+        .badge { background: #0284c7; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🎮 کۆنتڕۆڵکرنا یاریان - SalarBet Admin</h2>
+
+    <!-- فۆڕما زێدەکرنا یاریێن نوو -->
+    <div class="card">
+        <h3>➕ زێدەکرنا یاریا نوو</h3>
+        <form id="addMatchForm">
+            <div class="grid">
+                <div>
+                    <label>یانەیا خودان مال (Home)</label>
+                    <input type="text" id="homeTeam" placeholder="م. دهۆک" required>
+                </div>
+                <div>
+                    <label>یانەیا مێڤان (Away)</label>
+                    <input type="text" id="awayTeam" placeholder="م. زاخۆ" required>
+                </div>
+            </div>
+
+            <div style="margin-top: 12px;">
+                <label>دەمێ یاریێ</label>
+                <input type="datetime-local" id="matchTime" required>
+            </div>
+
+            <div class="grid" style="margin-top: 12px;">
+                <div>
+                    <label>Odds 1 (سەرکەوتنا Home)</label>
+                    <input type="number" step="0.01" id="homeOdds" placeholder="2.10" required>
+                </div>
+                <div>
+                    <label>Odds X (یەکسانبوون)</label>
+                    <input type="number" step="0.01" id="drawOdds" placeholder="3.00" required>
+                </div>
+                <div>
+                    <label>Odds 2 (سەرکەوتنا Away)</label>
+                    <input type="number" step="0.01" id="awayOdds" placeholder="2.80" required>
+                </div>
+            </div>
+
+            <button type="submit">تۆمارکرنا یاریێ د داتابێسێ دا</button>
+        </form>
+    </div>
+
+    <!-- خشتەیێ یاریێن هاتیە تۆمارکرن -->
+    <div class="card">
+        <h3>📋 لیستەیا ۱۰ یاریێن سەرەکی</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>یاری</th>
+                    <th>کاتی یاریێ</th>
+                    <th>ڕێژەیا پارەی (1 - X - 2)</th>
+                    <th>بارودۆخ</th>
+                </tr>
+            </thead>
+            <tbody id="adminMatchesTable">
+                <!-- داتایێن یاریان دێ ب JS هێنە بارکرن -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>

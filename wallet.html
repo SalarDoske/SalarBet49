@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/nav.css">
+    <link rel="stylesheet" href="./css/mid.css">
+    <link rel="stylesheet" href="./css/footer.css">
+    <title>SalarBet - My Wallet (IQD)</title>
+    <style>
+        body { background: #0b0a19; font-family: Arial, sans-serif; color: white; margin: 0; padding: 0; }
+        .wallet-container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: #15132d;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        .wallet-header {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border-bottom: 1px solid #2a265f;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+        @media (min-width: 600px) {
+            .wallet-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+        .balance-card {
+            background: linear-gradient(135deg, #1e1b4b, #000000);
+            padding: 2px;
+            border-radius: 10px;
+            text-align: center;
+            width: 100%;
+        }
+        .balance-card h3 { font-size: 14px; color: #cbd5e1; margin-bottom: 5px; }
+        .balance-card span { font-size: 28px; font-weight: bold; color: #10b981; }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .method-card {
+            background: #1e1b4b;
+            border: 2px solid #2a265f;
+            border-radius: 8px;
+            padding: 20px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .method-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-3px);
+        }
+        .method-card h4 { font-size: 16px; margin-bottom: 5px; }
+        .method-card p { font-size: 12px; color: #94a3b8; margin: 0; }
+        
+        .deposit-form {
+            margin-top: 30px;
+            background: #1e1b4b;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+        .deposit-form input, .deposit-form select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #0f0e26;
+            border: 1px solid #3b82f6;
+            border-radius: 5px;
+            color: white;
+            box-sizing: border-box;
+        }
+        .amount-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .amount-btn {
+            background: #0f0e26;
+            border: 1px solid #3b82f6;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+        }
+        .amount-btn.active, .amount-btn:hover {
+            background: #3b82f6;
+        }
+        .deposit-form button[type="submit"] {
+            background: #10b981;
+            color: white;
+            padding: 12px;
+            border: none;
+            width: 100%;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        .scan-box {
+            border: 2px dashed #3b82f6;
+            padding: 15px;
+            text-align: center;
+            border-radius: 8px;
+            margin: 10px 0;
+            background: #0f0e26;
+            cursor: pointer;
+            color: #93c5fd;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wallet-container">
+        <div class="wallet-header">
+            <div class="balance-card">
+                <h3>BAKIYAYA HEYI (ACTIVE BALANCE)</h3>
+                <span>IQD {{ balance }}</span>
+            </div>
+            <div class="action-buttons">
+                <a href="index.html" style="background: #ef4444; padding: 12px 16px; border-radius: 6px; color: white; text-decoration: none; font-weight: bold; display: inline-block; font-size: 14px;">ڤەگەر بۆ سەرەکی</a>
+                <a href="withdraw.html" style="background: #ffffff; padding: 12px 16px; border-radius: 6px; color: #000000; text-decoration: none; font-weight: bold; display: inline-block; font-size: 14px;">ڤەکێشانا پارەی</a>
+            </div>
+        </div>
+
+        <h3 style="margin-bottom: 15px; color: #e2e8f0;">رێگەیێن پڕکرنا پارەی (Deposit Methods)</h3>
+        
+        <div class="methods-grid">
+            <div class="method-card" onclick="selectMethod('Stripe')">
+                <h4 style="color: #6366f1;">Stripe</h4>
+                <p>Credit Card ($ / IQD)</p>
+            </div>
+            <div class="method-card" onclick="selectMethod('FIB')">
+                <h4 style="color: #3b82f6;">First Iraqi Bank</h4>
+                <p>FIB App / QR</p>
+            </div>
+            <div class="method-card" onclick="selectMethod('ZainCash')">
+                <h4 style="color: #eab308;">ZainCash</h4>
+                <p>Mobile Wallet</p>
+            </div>
+            <div class="method-card" onclick="selectMethod('Korak')">
+                <h4 style="color: #f97316;">Korak</h4>
+                <p>Card & Barcode</p>
+            </div>
+            <div class="method-card" onclick="selectMethod('Asiacell')">
+                <h4 style="color: #ef4444;">Asiacell</h4>
+                <p>Card & Barcode</p>
+            </div>
+        </div>
+
+        <div id="depositFormSection" class="deposit-form">
+            <h3 id="selectedMethodTitle" style="margin-bottom: 10px; color: #3b82f6;">پڕکرنا ب رێکا: <span></span></h3>
+            <form onsubmit="submitDeposit(event)">
+                <input type="hidden" id="gatewayInput">
+                <input type="hidden" id="selectedAmount">
+                
+                <div id="amountSection">
+                    <label>بڕێ پارەی ب دینارێ عێراقی (IQD):</label>
+                    <div class="amount-buttons" id="presetAmountsGrid"></div>
+                    <input type="number" id="customAmountInput" placeholder="یان بڕەکێ دی بنڤیسە (ب دینار)..." style="margin-top: 5px;">
+                </div>
+                
+                <div id="dynamicFields"></div>
+
+                <button type="submit">التأكيد (پڕکرنا هەلدەسەنگاندنێ)</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function selectMethod(methodName) {
+            document.getElementById('depositFormSection').style.display = 'block';
+            document.querySelector('#selectedMethodTitle span').innerText = methodName;
+            document.getElementById('gatewayInput').value = methodName;
+
+            let dynamicFields = document.getElementById('dynamicFields');
+            let amountSection = document.getElementById('amountSection');
+            let presetGrid = document.getElementById('presetAmountsGrid');
+            
+            dynamicFields.innerHTML = '';
+            amountSection.style.display = 'block';
+            presetGrid.innerHTML = '';
+
+            let amounts = [5000, 10000, 25000, 50000, 100000, 250000];
+
+            if(methodName === 'Korak' || methodName === 'Asiacell') {
+                amounts = [1000, 2000, 5000, 10000, 20000, 25000, 50000];
+                dynamicFields.innerHTML = `
+                    <label style="margin-top: 15px; display: block;">سەکنا بارکودا سەر کارتی (Scan Barcode):</label>
+                    <div class="scan-box" onclick="document.getElementById('barcodeFile').click()">
+                        📷 لێرە کلیک بکە بۆ ڤەکرنا کامیرێ و گرتنا بارکودا کارتێ
+                    </div>
+                    <input type="file" id="barcodeFile" accept="image/*" capture="environment" style="display:none;" onchange="showBarcodeFileName(this)">
+                    <p id="barcodeChosenName" style="color: #10b981; font-size: 13px; margin-top: 5px;"></p>
+                    
+                    <label style="margin-top: 10px; display: block;">یان کۆدێ کارتا پڕکرنێ ب دەست بنڤیسە:</label>
+                    <input type="text" id="cardCodeInput" placeholder="کۆدێ کارتێ بڕەڤینە...">
+                `;
+            } else if(methodName === 'FIB') {
+                dynamicFields.innerHTML = `
+                    <label style="margin-top: 10px; display: block;">FIB رقم هاتفك (ژمارەیا مۆبایلا FIB):</label>
+                    <input type="text" id="fibPhone" placeholder="078XXXXXXXX" required>
+
+                    <label style="margin-top: 10px; display: block;">اسمك في FIB (ناڤێ تە ل سەر هەژمارا FIB):</label>
+                    <input type="text" id="fibName" placeholder="ناڤێ تە..." required>
+
+                    <label style="margin-top: 10px; display: block;">الرجاء تحميل لقطة الشاشة لعملية التحويل الناجحة (وێنەیێ پشتریا ڤەگوهاستنێ):</label>
+                    <div class="scan-box" onclick="document.getElementById('fibReceipt').click()">
+                        + لێرە کلیک بکە بۆ بارکرنا لقطة الشاشة (وێنە یان PDF)
+                    </div>
+                    <input type="file" id="fibReceipt" accept="image/png, image/jpeg, image/jpg, application/pdf" style="display:none;" onchange="showFileName(this)">
+                    <p id="fileChosenName" style="color: #10b981; font-size: 13px; margin-top: 5px;"></p>
+                `;
+            } else if(methodName === 'ZainCash') {
+                dynamicFields.innerHTML = `
+                    <label style="margin-top: 10px; display: block;">ژمارەیا مۆبایلا ZainCash:</label>
+                    <input type="text" id="accountInput" placeholder="078xxxxxxxx" required>
+                `;
+            }
+
+            amounts.forEach((amt, index) => {
+                let btn = document.createElement('div');
+                btn.className = 'amount-btn' + (index === 2 ? ' active' : '');
+                btn.innerText = amt.toLocaleString() + ' IQD';
+                btn.onclick = () => {
+                    document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.getElementById('selectedAmount').value = amt;
+                    document.getElementById('customAmountInput').value = '';
+                };
+                presetGrid.appendChild(btn);
+            });
+            document.getElementById('selectedAmount').value = amounts[2];
+        }
+
+        function showFileName(input) {
+            if(input.files && input.files[0]) {
+                document.getElementById('fileChosenName').innerText = "فایل هاتیە هەلبژارتن: " + input.files[0].name;
+            }
+        }
+
+        function showBarcodeFileName(input) {
+            if(input.files && input.files[0]) {
+                document.getElementById('barcodeChosenName').innerText = "وێنەیێ بارکودی هاتیە گرتن: " + input.files[0].name;
+            }
+        }
+
+        async function submitDeposit(event) {
+            event.preventDefault();
+            let gateway = document.getElementById('gatewayInput').value;
+            let customAmt = document.getElementById('customAmountInput').value;
+            let amount = customAmt ? customAmt : document.getElementById('selectedAmount').value;
+            
+            let formData = new FormData();
+            formData.append('gateway', gateway);
+            formData.append('amount', amount);
+            formData.append('currency', 'IQD');
+
+            if(gateway === 'Korak' || gateway === 'Asiacell') {
+                formData.append('code', document.getElementById('cardCodeInput').value);
+                let barcodeFile = document.getElementById('barcodeFile').files[0];
+                if(barcodeFile) {
+                    formData.append('receipt', barcodeFile);
+                }
+            } else if(gateway === 'FIB') {
+                formData.append('fib_phone', document.getElementById('fibPhone').value);
+                formData.append('fib_name', document.getElementById('fibName').value);
+                let receiptFile = document.getElementById('fibReceipt').files[0];
+                if(receiptFile) {
+                    formData.append('receipt', receiptFile);
+                }
+            } else if(gateway === 'ZainCash') {
+                formData.append('account', document.getElementById('accountInput').value);
+            }
+
+            try {
+                let response = await fetch('/api/process-deposit', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                let data = await response.json();
+                if(data.url) {
+                    window.location.href = data.url;
+                } else if(data.success) {
+                    alert(data.message || 'پڕکرنا پارەی ب سەرکەفتیانە هاتە هنارتن!');
+                    location.reload();
+                } else {
+                    alert(data.error || 'شاشیەک ڕوودا!');
+                }
+            } catch(err) {
+                console.error(err);
+                alert('کێشە د پەیوەندیا سەرفەرێ دا هەیە!');
+            }
+        }
+    </script>
+</body>
+</html>

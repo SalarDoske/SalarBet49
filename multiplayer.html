@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SalarBet - مێزا یاریێ (51)</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        body { 
+            background: #1e293b; 
+            color: white; 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            margin: 0; 
+            padding: 10px; 
+            overflow-x: hidden;
+        }
+        .table-container { 
+            position: relative; 
+            width: 100%; 
+            max-width: 800px; 
+            height: 550px; 
+            margin: 20px auto; 
+            background: radial-gradient(circle, #0f766e 0%, #115e59 100%); 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8); 
+            border: 8px solid #0f4c5c;
+        }
+        /* دیزاینا وەرەقان */
+        .card {
+            width: 55px;
+            height: 80px;
+            background: white;
+            color: black;
+            border-radius: 6px;
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 4px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+            cursor: pointer;
+            user-select: none;
+            transition: 0.2s;
+        }
+        .card.red { color: #dc2626; }
+        .card:hover { transform: translateY(-10px); }
+
+        /* پشکا مێزا ناڤەڕاست (Melds / کۆمەلان) */
+        .center-board {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px dashed rgba(255,255,255,0.3);
+        }
+        .meld-group {
+            display: flex;
+            gap: 3px;
+            background: rgba(255,255,255,0.1);
+            padding: 5px;
+            border-radius: 6px;
+        }
+
+        /* دەستکا وەرەقان و مەلەف ل لایێ چەپێ */
+        .deck-area {
+            position: absolute;
+            top: 40%;
+            left: 30px;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 10px;
+        }
+        .card-back {
+            width: 55px;
+            height: 80px;
+            background: linear-gradient(135deg, #3b82f6, #1e3a8a);
+            border-radius: 6px;
+            border: 2px solid white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+        }
+
+        /* دەستێ یاریزانی ل خوارێ */
+        .player-hand {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 5px;
+            background: rgba(0,0,0,0.3);
+            padding: 10px 20px;
+            border-radius: 15px;
+        }
+
+        /* کۆنتڕۆڵ و لۆگین */
+        .login-box, .lobby-box {
+            background: #1e1b4b;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 400px;
+            margin: 50px auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+        }
+        input, select, button {
+            padding: 10px;
+            margin: 8px 0;
+            width: 90%;
+            border-radius: 6px;
+            border: none;
+            font-size: 15px;
+        }
+        button { background: #10b981; color: white; font-weight: bold; cursor: pointer; }
+        button:hover { background: #059669; }
+    </style>
+</head>
+<body>
+
+    <!-- پشکا لۆگینێ -->
+    <div id="loginArea" class="login-box">
+        <h2>🃏 مانی توت (51) - یارییا کوردی</h2>
+        <p>ناڤێ خۆ بنڤیسە:</p>
+        <input type="text" id="username" placeholder="ناڤێ بەکارهێنەری..." />
+        <button onclick="enterLobby()">چوونا ژوورێن یاریێ</button>
+    </div>
+
+    <!-- پشکا هەلبژارتنا مێزێ -->
+    <div id="lobbyArea" class="lobby-box" style="display: none;">
+        <h3>هەلبژارتنا مێزێ:</h3>
+        <select id="playersCount">
+            <option value="2">مێزا ٢ کەسی (حەقی مێزی: ۲۰۰ دینار)</option>
+            <option value="4">مێزا ٤ کەسی - ٢ هەڤرک (حەقی مێزی: ٤۰۰ دینار)</option>
+        </select>
+        <select id="betAmount">
+            <option value="1000">بڕێ بەتێ: 1,000</option>
+            <option value="2000">بڕێ بەتێ: 2,000</option>
+            <option value="5000">بڕێ بەتێ: 5,000</option>
+            <option value="10000">بڕێ بەتێ: 10,000</option>
+        </select>
+        <button onclick="joinGameTable()">بگەهە مێزا یاریێ</button>
+    </div>
+
+    <!-- مێزا یاریێ (ڕوەکا وێنەیی) -->
+    <div id="gameTableArea" style="display: none;">
+        <h3 id="tableStatus" style="margin: 5px;">مێزا لایڤ: چاوەڕێی یاریزانان...</h3>
+        
+        <div class="table-container">
+            <!-- دەستکا وەرەقان و مەلەف (Stock & Discard) -->
+            <div class="deck-area">
+                <div class="card-back"></div>
+                <div class="card red">
+                    <span>9♦</span>
+                    <span style="font-size: 20px; text-align: center;">♦</span>
+                    <span style="transform: rotate(180deg);">9♦</span>
+                </div>
+            </div>
+
+            <!-- کۆمەلا وەرەقان لە ناڤەڕاستا مێزی (Melds) -->
+            <div class="center-board">
+                <div class="meld-group">
+                    <div class="card red"><span>6♥</span><span>♥</span><span>6♥</span></div>
+                    <div class="card red"><span>6♥</span><span>♥</span><span>6♥</span></div>
+                    <div class="card red"><span>6♥</span><span>♥</span><span>6♥</span></div>
+                </div>
+                <div class="meld-group">
+                    <div class="card red"><span>5♦</span><span>♦</span><span>5♦</span></div>
+                    <div class="card red"><span>5♦</span><span>♦</span><span>5♦</span></div>
+                </div>
+            </div>
+
+            <!-- دەستێ یاریزانی (ل خوارێ) -->
+            <div class="player-hand" id="playerHandContainer">
+                <div class="card"><span>3♠</span><span>♠</span><span>3♠</span></div>
+                <div class="card"><span>K♣</span><span>♣</span><span>K♣</span></div>
+                <div class="card"><span>J♥</span><span>♥</span><span>J♥</span></div>
+                <div class="card red"><span>10♦</span><span>♦</span><span>10♦</span></div>
+                <div class="card"><span>4♠</span><span>♠</span><span>4♠</span></div>
+                <div class="card red"><span>Q♥</span><span>♥</span><span>Q♥</span></div>
+            </div>
+        </div>
+
+        <div>
+            <button style="background: #3b82f6; width: auto; padding: 10px 20px;" onclick="alert('وەرەقە گوهۆڕین / Mulligan')">🔄 تێهەلنەکرن (بدل)</button>
+            <button style="background: #ef4444; width: auto; padding: 10px 20px;" onclick="alert('تەحشی (51)')">🔥 تەحشی کردن</button>
+        </div>
+    </div>
+
+    <script>
+        const socket = io();
+        let myName = "";
+
+        function enterLobby() {
+            myName = document.getElementById('username').value;
+            if(!myName) { alert('تکایە ناڤێ خۆ بنڤیسە!'); return; }
+            document.getElementById('loginArea').style.display = 'none';
+            document.getElementById('lobbyArea').style.display = 'block';
+        }
+
+        function joinGameTable() {
+            const playersCount = document.getElementById('playersCount').value;
+            const betAmount = document.getElementById('betAmount').value;
+
+            document.getElementById('lobbyArea').style.display = 'none';
+            document.getElementById('gameTableArea').style.display = 'block';
+
+            socket.emit('join_mani_room', {
+                roomId: "mani_room_1",
+                username: myName,
+                playersCount: parseInt(playersCount),
+                betAmount: parseInt(betAmount)
+            });
+        }
+
+        socket.on('room_update', function(data) {
+            document.getElementById('tableStatus').innerText = data.message;
+        });
+
+        socket.on('start_mani_game', function(data) {
+            document.getElementById('tableStatus').innerText = "🚀 یاری دەست پێ کر! وەرەقە هاتنە بەلاڤکرن.";
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/svg" href="./img/logo/nc-favicon.png">
+    <link rel="stylesheet" href="./css/fontawesome/all.min.css">
+    <link rel="stylesheet" href="./css/nav.css">
+    <link rel="stylesheet" href="./css/styles/sportsbetting.css">
+    <link rel="stylesheet" href="./css/footer.css">
+    <script src="./js/nav.js" defer></script>
+    <script src="./js/sb.js" defer></script>
+    
+    <title>Sports Betting - SalarBet</title>
+</head>
+<body>
+    <div class="nav-container">
+        <nav class="nav">
+            <div class="navlogo">
+                <a href="index.html"><img class="navlogo1" src="./img/logo/Logo.png" alt="site logo"></a>
+                <img class="navlogo2" src="./img/logo/arsenal.png" alt="arsenal">
+            </div>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="sportsbetting.html" class="cur-pg">SPORTS BETTING</a></li>
+                <li class="nav-item"><a href="casino.html">CASINO</a></li>
+                <li class="nav-item"><a href="livecasino.html">LIVE CASINO</a></li>
+                <li class="nav-item"><a href="games.html">GAMES</a><span class="new">NEW</span></li>
+                <li class="nav-item"><a href="virtual.html">VIRTUAL</a><span class="new">NEW</span></li>
+            </ul>
+
+            <div class="signin-container">
+                {% if username %}
+                    <div style="display: flex; align-items: center; gap: 12px; color: #fff;">
+                        <span style="font-weight: bold; color: #fff;">{{ username }}</span>
+                        <span style="font-weight: bold; color: #4ade80;">IQD{{ balance }}</span>
+                        <a href="{{ url_for('logout') }}" style="background: #dc2626; color: #fff; padding: 5px 10px; border-radius: 4px; text-decoration: none; font-size: 13px;">Logout</a>
+                    </div>
+                {% else %}
+                    <a class="regBtn" href="#">REGISTER</a>
+                    <a class="signBtn" href="#">SIGN IN</a>
+                {% endif %}
+            </div>
+
+            <div id="menu" class="menu">&#9776;</div>
+
+            <div class="langs">
+                <div class="lang-container">
+                    <div id="lang1" class="lang lang1">
+                        <span><img src="./img/icons/en.svg" alt="US Flag icon"></span>
+                        <span>EN</span>
+                    </div>
+                    <ul id="lang2" class="lang-drop">
+                        <li class="lang">
+                            <span><img src="./img/icons/de.svg" alt="Flag icon"></span>
+                            <span>DE</span>
+                        </li>
+                        <li class="lang">
+                            <span><img src="./img/icons/tr.svg" alt="Flag icon"></span>
+                            <span>TR</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div id="navmob-container" class="navmob-container">
+        <div class="navmob-inner">
+            <div id="cross" class="cross">&#10006;</div>
+            <div class="navmob">
+                <div class="logo-container">
+                    <a href="index.html"><img src="./img/logo/Logo.png" alt="site logo"></a>
+                </div>
+
+                <!-- بەشی لۆگین و باڵانس بۆ مێنوی موبایل -->
+                <div class="mob-user-box" style="padding: 15px; border-bottom: 1px solid #312e81; text-align: center; color: #fff;">
+                    {% if username %}
+                        <span style="display: block; font-weight: bold; margin-bottom: 5px; color: #fff;">{{ username }}</span>
+                        <span style="display: block; font-weight: bold; margin-bottom: 10px; color: #4ade80;">Balance: IQD{{ balance }}</span>
+                        <a href="{{ url_for('logout') }}" style="color: #f87171; text-decoration: none; font-size: 14px;"> (Logout)</a>
+                    {% else %}
+                        <div style="display: flex; gap: 10px; justify-content: center;">
+                            <a class="regBtn" href="#" style="padding: 8px 15px; background: #4f46e5; color: #fff; border-radius: 4px; text-decoration: none;">تۆمارکرن</a>
+                            <a class="signBtn" href="#" style="padding: 8px 15px; background: #374151; color: #fff; border-radius: 4px; text-decoration: none;">چوونا ژوورا</a>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <ul class="navmob-list">
+                    <li class="navmob-item"><a href="sportsbetting.html">SPORT BETTING</a></li>
+                    <li class="navmob-item"><a href="casino.html">CASINO</a></li>
+                    <li class="navmob-item"><a href="livecasino.html">LIVE CASINO</a></li>
+                    <li class="navmob-item"><a href="games.html">GAMES<span>NEW</span></a></li>
+                    <li class="navmob-item"><a href="virtual.html">VIRTUAL<span>NEW</span></a></li>
+                </ul>
+                <div class="gift-container">
+                    <a href="#"><img src="./img/icons/gift.png" alt="gift box"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main class="main-content">
+
+        <!-- Sub Nav below -->
+        <div class="subnav-container">
+            <span id="current-time">04:56:58 PM</span>
+
+            <ul class="subnav-list">
+                <li><a href="#">FANTASY SPORTS</a></li>
+                <li><a href="#">STATISTICS</a></li>
+                <li><a href="#">PROMOTIONS</a></li>
+            </ul>
+
+            <div class="odds-container">
+                <div class="odds-top">
+                    <p class="odds-head">Decimal</p>
+                    <span class="odds-arrowup">&#10095;</span>
+                </div>
+                <div class="odds-bottom">
+                    <div class="odds-item">
+                        <input type="radio" id="decimal" name="odds" value="decimal" checked>
+                        <label for="decimal">Decimal</label>
+                    </div>
+                    <div class="odds-item">
+                        <input type="radio" id="fractional" name="odds" value="fractional">
+                        <label for="fractional">Fractional</label>
+                    </div>
+                    <div class="odds-item">
+                        <input type="radio" id="american" name="odds" value="american">
+                        <label for="american">American</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Section below -->
+        <section class="section-content">
+            <div class="content-container">
+                <div class="sbt1" id="sbt1">
+
+                    <!-- Resize Tab -->
+                    <div class="resize-container">
+                        <div class="resize-inner">
+                            <img class="resize-icon" src="./img/icons/resize-ico.png" alt="resize icon">
+                        </div>
+                    </div>
+
+                    <!-- Sport Search Tab -->
+                    <div class="sports-search-container">
+                        <div class="sports-search">
+                            <div class="sports-search-top">
+                                <div class="sports-search-a" id="sports-search-a">
+                                    <a href="#" class="ss-a" id="ss-1">All</a>
+                                    <a href="#" id="ss-2"><img src="./img/icons/vid-ico.png" alt="video icon"></a>
+                                </div>
+                                <div class="sports-search-b">
+                                    <a href="#" class="ss-3"><img src="./img/icons/w-ico.png" alt="globe icon"></a>
+                                </div>
+                            </div>
+                            <div class="sport-search-field">
+                                <div class="sport-search-icon">
+                                    <img src="./img/icons/search-ico.png" alt="">
+                                </div>
+                                <input type="text" placeholder="Search">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Favourites Tab -->
+                    <div class="favor-container">
+                        <div class="favor-out">
+                            <div class="favor-inner" id="favor-inner">
+                                <div class="favor-1">
+                                    <img src="./img/icons/star-ico.png" alt="star icon">
+                                    <span>Favourites</span>
+                                </div>
+                                <div class="favor-2">
+                                    <span>0</span>
+                                    <span class="fav-arrow" id="favor-arrow">&#10095;</span>
+                                </div>
+                            </div>
+                            <div class="favor-sport fs-hide" id="favor-sport">
+                                <p>Click on the &#9733; to add it to Favourites</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top leagues tab -->
+                    <div class="tl-container">
+                        <div class="tl-out">
+                            <div class="tl-inner" id="tl-inner">
+                                <div class="tl-a">
+                                    <i class="fas fa-medal"></i>
+                                    <span>Top Leagues</span>
+                                </div>
+                                <div class="tl-b">
+                                    <i class="fas fa-chevron-up" id="tl-arrow"></i>
+                                </div>
+                            </div>
+
+                            <div class="tl-list" id="tl-list">
+                                <div class="tl-item">
+                                    <div class="tl-item-a">
+                                        <img src="./img/icons/football-black-ico.png" alt="">
+                                        <span>Iraq Stars League</span>
+                                    </div>
+                                    <div class="tl-item-b">
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ⚽ بەشێ سەرەکی یێ نیشاندانا یاریان (DAINAMIK MATCHES) -->
+                <div class="sbt2" id="sbt2">
+                    <div class="eventlist-container">
+                        <div class="eventlist-inner">
+                            <div class="eventlist-header">
+                                <div class="eventlist-header-inner">
+                                    <div class="elh-a">
+                                        <div class="elh-a-left">
+                                            <span class="elh-a-name" style="font-size: 18px; font-weight: bold; color: #38bdf8;">⚽ یاریێن خولا عیراقێ و جیهانی</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ئەڤ فۆڵدەرە دێ ژ JS هەمی ۱۰ یاریان بار کەت -->
+                            <div id="dynamic-matches-container" style="padding: 15px;">
+                                <p style="color: #217fd6; text-align: center; padding: 20px;">یاری د بارکرنێ دانە...</p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Betslip Tab -->
+                <div class="sbt4" id="sbt4">
+                    <div class="betslip-container">
+                        <div class="betslip-inner">
+                            <div class="betslip-a">
+                                <div class="betslip-a-head">
+                                    <span class="bets-title">Betslip</span>
+                                </div>
+                            </div>
+                            <div class="betslip-b" style="padding: 15px; color: #cb1b1b; text-align: center;">
+                                <p>ل سەر هەلبژارتنا 1 - X - 2 کلیک بکە بۆ دانا گرەوێ!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Section below -->
+    <footer class="footer-section">
+        <div class="footer-inner">
+            <div class="footer-bottom">
+                <div class="footer-bottom-right">
+                    <p>© SalarBet 2026 | All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+</body>
+</html>
